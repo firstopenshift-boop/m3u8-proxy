@@ -40,7 +40,7 @@ app.get("/pp", async (req, res) => {
       // m3u8 → 异或解密
       url = simpleDecrypt(decodeURIComponent(enc));
     }
-    console.log("解密后的 URL:", url);
+    //console.log("解密后的 URL:", url);
   } catch (err) {
     return res.status(400).send("Invalid 'jj' parameter");
   }
