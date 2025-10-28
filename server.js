@@ -40,7 +40,7 @@ app.get("/pp", async (req, res) => {
       // m3u8 → 异或解密
       url = simpleDecrypt(decodeURIComponent(enc));
     }
-    //console.log("解密后的 URL:", url);
+    console.log("解密后的 URL:", url);
   } catch (err) {
     return res.status(400).send("Invalid 'jj' parameter");
   }
@@ -53,11 +53,23 @@ app.get("/pp", async (req, res) => {
       const baseUrl = url.substring(0, url.lastIndexOf("/") + 1);
 
       // 替换 TS 路径 → Base64 编码 + jj 参数
-      data = data.replace(/(.*\.ts)/g, (match) => {
-        const tsUrl = baseUrl + match;
-        const encTs = Buffer.from(tsUrl).toString("base64");
-        return `/pp?jj=${encodeURIComponent(encTs)}`;
-      });
+      const direct = req.query.dd === "1"; // 是否直连模式
+
+	data = data.replace(/(.*\.ts)/g, (match) => {
+	  const tsUrl = baseUrl + match;
+
+	  if (direct) {
+		// 直连模式：返回真实 ts 链接
+		return tsUrl;
+	  } else {
+		// 代理模式：返回代理地址
+		const encTs = Buffer.from(tsUrl).toString("base64");
+		return `/pp?jj=${encodeURIComponent(encTs)}`;
+	  }
+	});
+
+	  
+	  
 
       res.set("Content-Type", response.headers.get("content-type") || "application/vnd.apple.mpegurl");
       res.set("Access-Control-Allow-Origin", "*");
