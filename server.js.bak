@@ -59,6 +59,9 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
   }
 }
 
+// ---------------------------
+// 主代理路由
+// ---------------------------
 app.get("/pp", async (req, res) => {
   const enc = req.query.jj; // jj 参数
   if (!enc) return res.status(400).send("Missing 'jj' parameter");
@@ -117,4 +120,14 @@ app.get("/pp", async (req, res) => {
   }
 });
 
+// ---------------------------
+// 健康检查路由（Render ping）
+// ---------------------------
+app.get("/health", (req, res) => {
+  res.status(200).send("✅ OK - Service is running");
+});
+
+// ---------------------------
+// 启动服务
+// ---------------------------
 app.listen(PORT, () => console.log(`✅ Proxy running on port ${PORT}`));
